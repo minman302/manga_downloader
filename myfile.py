@@ -2,8 +2,10 @@ from typing import Text
 import requests
 from requests.api import get
 
+import pandas
 
-tl_url = "https://jujutsu-kaisen.online/"
+
+tl_url = "https://tokyorevengersmanga.com"
 
 #get source text
 def get_source(_tl_url):
@@ -49,21 +51,29 @@ def trim(_urls):
                     
  
 def get_imgs(_urls_list):
+    err_counter = []
     for i in range(0, len(_urls_list)):
-        _img_links = []
+        _img_links = [] #relpace with pandas df
         src = get_source(_urls_list[i])
         if "wp-block-image" in src:
             src = split_src(src, '"wp-block-image"><img src="')
-            for j in len(src):
-                pass
-        
-        # for i in range(1, len(_img_links)):
-        #     _img_links[i] = _img_links[i].split('" alt=')[0] # everything before " alt=
-        #     print(i)
-        
-    
-print(trim(chapter_links))
-get_imgs(trim(chapter_links))
+            for j in range(1, len(src)):
+                _img_links.append(src[j].split('" alt="')[0])
+                print(_img_links[j - 1])
+        elif '<img class="aligncenter"' in src:
+            src = split_src(src, '<img class="aligncenter" src="')
+            for u in range(1, len(src)):
+                _img_links.append(src[u].split('" alt="')[0])
+                print(_img_links[u - 1])
+        else:
+            err_counter.append("Chapter" + str(i))
+    return err_counter
+
+
+a = get_imgs(trim(chapter_links))
+
+for i in range(0, len(a)):
+    print(a[i])
                        
     
     
