@@ -5,18 +5,21 @@ from requests.api import get
 
 tl_url = "https://jujutsu-kaisen.online/"
 
-#get source text and split by link beginning
-def get_source(_tl_url, _split):
+#get source text
+def get_source(_tl_url):
     r = requests.get(_tl_url)
-    r_source = r.text
-    return r_source.split(_split) #split the source at the specified string
-    
+    return r.text
 
+#split by link beginning
+def split_src(_src, _split):
+    return _src.split(_split)
+    
 
 #put items in array
 chapter_links = []
-for row in get_source(tl_url, '"><a href="h'): #inadvertadley removes the first h in https://
+for row in split_src(get_source(tl_url), '"><a href="h'): #inadvertadley removes the first h in https://
         chapter_links.append("h" + row) #adds back that h to the url
+        
         
         
     
@@ -48,18 +51,19 @@ def trim(_urls):
 def get_imgs(_urls_list):
     for i in range(0, len(_urls_list)):
         _img_links = []
-        if "wp-block-image" in 
-        for row in get_source(_urls_list[i], 'class="aligncenter" src="'):
-            _img_links.append(row)
-            
-        print(len(_img_links))
+        src = get_source(_urls_list[i])
+        if "wp-block-image" in src:
+            src = split_src(src, '"wp-block-image"><img src="')
+            for j in len(src):
+                pass
+        
         # for i in range(1, len(_img_links)):
         #     _img_links[i] = _img_links[i].split('" alt=')[0] # everything before " alt=
         #     print(i)
         
     
-print(type(trim(chapter_links)))   
-get_imgs(trim(chapter_links))    
+print(trim(chapter_links))
+get_imgs(trim(chapter_links))
                        
     
     
